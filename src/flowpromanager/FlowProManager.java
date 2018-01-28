@@ -144,6 +144,13 @@ public class FlowProManager {
                         radka = radka + " modules/dynamics/" + file.getName();
                     }
                 }
+                dir = new File("./modules/optimisation");
+                filesList = dir.listFiles();
+                for (File file : filesList) {
+                    if (file.isFile()) {
+                        radka = radka + " modules/optimisation/" + file.getName();
+                    }
+                }
                 out.write(radka);
                 out.newLine();
                 out.close();
@@ -230,6 +237,15 @@ public class FlowProManager {
                     String templateDyn = selectTemplate(dynPath + packageNameDyn);
                     addToParametersFile(out, "FlowPro.jar", "templates/headerDynamics.txt");
                     addToParametersFile(out, dynPath + packageNameDyn, templateDyn);
+                }
+                
+                if (ask("Optimisation problem [y/N]? ").equalsIgnoreCase("y")) {
+                    vspace(1);
+                    String dynPath = "modules/optimisation/";
+                    String packageNameOpt = selectpackage(dynPath);
+                    String templateDyn = selectTemplate(dynPath + packageNameOpt);
+                    addToParametersFile(out, "FlowPro.jar", "templates/headerOptimisation.txt");
+                    addToParametersFile(out, dynPath + packageNameOpt, templateDyn);
                 }
                 out.close();
                 System.out.println("File parameters.txt was create sucesfully.");
