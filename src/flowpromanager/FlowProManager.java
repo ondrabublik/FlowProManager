@@ -216,7 +216,16 @@ public class FlowProManager {
     }
 
     public static void createParameters(String simulationPath) throws IOException {
-        File file = new File(simulationPath + "parameters.txt");
+        File file = new File(simulationPath);
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                System.out.println("Directory is created!");
+            } else {
+                System.out.println("Failed to create directory!");
+            }
+        }
+
+        file = new File(simulationPath + "parameters.txt");
         if (!file.exists()) {
             vspace(1);
             System.out.println("File parameters.txt will be create.");
