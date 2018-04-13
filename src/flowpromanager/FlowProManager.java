@@ -122,36 +122,73 @@ public class FlowProManager {
                 out.write(radka);
                 out.newLine();
 
-                radka = "Class-Path:";
+                out.write("Class-Path:");
+                int length = 11;
                 File dir = new File("./lib");
                 File[] filesList = dir.listFiles();
                 for (File file : filesList) {
                     if (file.isFile()) {
-                        radka = radka + " lib/" + file.getName();
+                        length += (" lib/" + file.getName()).length();
+                        if(length > 70){
+                            length = 0;
+                            out.write(" ");
+                            out.newLine();
+                        }
+                        out.write(" lib/" + file.getName());
                     }
                 }
                 dir = new File("./modules/equations");
                 filesList = dir.listFiles();
                 for (File file : filesList) {
                     if (file.isFile()) {
-                        radka = radka + " modules/equations/" + file.getName();
+                        length += (" modules/equations/" + file.getName()).length();
+                        if(length > 70){
+                            length = 0;
+                            out.write(" ");
+                            out.newLine();
+                        }
+                        out.write(" modules/equations/" + file.getName());
                     }
                 }
                 dir = new File("./modules/dynamics");
                 filesList = dir.listFiles();
                 for (File file : filesList) {
                     if (file.isFile()) {
-                        radka = radka + " modules/dynamics/" + file.getName();
+                        length += file.getName().length();
+                        if(length > 70){
+                            length = 0;
+                            out.write(" ");
+                            out.newLine();
+                        }
+                        out.write(" modules/dynamics/" + file.getName());
                     }
                 }
                 dir = new File("./modules/optimisation");
                 filesList = dir.listFiles();
                 for (File file : filesList) {
                     if (file.isFile()) {
-                        radka = radka + " modules/optimisation/" + file.getName();
+                        length += (" modules/optimisation/" + file.getName()).length();
+                        if(length > 70){
+                            length = 0;
+                            out.write(" ");
+                            out.newLine();
+                        }
+                        out.write(" modules/optimisation/" + file.getName());
                     }
                 }
-                out.write(radka);
+                dir = new File("./modules/solutionmonitor");
+                filesList = dir.listFiles();
+                for (File file : filesList) {
+                    if (file.isFile()) {
+                        length += ("modules/solutionmonitor/" + file.getName()).length();
+                        if(length > 70){
+                            length = 0;
+                            out.write(" ");
+                            out.newLine();
+                        }
+                        out.write(" modules/solutionmonitor/" + file.getName());
+                    }
+                }
                 out.newLine();
                 out.close();
 
