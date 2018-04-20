@@ -32,7 +32,12 @@ import java.util.zip.ZipOutputStream;
  */
 public class FlowProManager {
 
-    final static String ARG_FILE_NAME = "args.txt";
+    public static final String ARG_FILE_NAME = "args.txt";
+    public SimulationSetup simulSetup;
+
+    FlowProManager() {
+        simulSetup = new SimulationSetup();
+    }
 
     /**
      * @param args the command line arguments
@@ -46,11 +51,11 @@ public class FlowProManager {
 
         switch (args[0].toLowerCase()) {
             case "update": // update libraryie in manifest file
-                deleteFileFromZip("FlowPro.jar","META-INF/MANIFEST.MF");
-                deleteFileFromZip("FlowPro.zip","FlowPro.jar");
+                deleteFileFromZip("FlowPro.jar", "META-INF/MANIFEST.MF");
+                deleteFileFromZip("FlowPro.zip", "FlowPro.jar");
                 createManifest();
-                saveFileIntoZip("FlowPro.jar","MANIFEST.MF","META-INF/");
-                saveFileIntoZip("FlowPro.zip","FlowPro.jar","");
+                saveFileIntoZip("FlowPro.jar", "MANIFEST.MF", "META-INF/");
+                saveFileIntoZip("FlowPro.zip", "FlowPro.jar", "");
                 break;
 
             case "createparamfile": // create parameters.txt file
@@ -58,7 +63,8 @@ public class FlowProManager {
                 reader = new BufferedReader(new FileReader(ARG_FILE_NAME));
 
                 String line;
-                String geometryName, simulationName;
+                String geometryName,
+                 simulationName;
                 if ((line = reader.readLine()) != null) {
                     args = line.split(" ");
                     if (args.length != 2) {
@@ -73,9 +79,17 @@ public class FlowProManager {
                     throw new IOException("file " + ARG_FILE_NAME + " is empty");
                 }
                 break;
-                
+
             case "console": // start console
-                new Console().start();
+                new CMDConsole().start();
+                break;
+
+            case "gui": // start GUI
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        new FlowProGUI().setVisible(true);
+                    }
+                });
                 break;
         }
     }
@@ -129,7 +143,7 @@ public class FlowProManager {
                 for (File file : filesList) {
                     if (file.isFile()) {
                         length += (" lib/" + file.getName()).length();
-                        if(length > 70){
+                        if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
@@ -142,7 +156,7 @@ public class FlowProManager {
                 for (File file : filesList) {
                     if (file.isFile()) {
                         length += (" modules/equations/" + file.getName()).length();
-                        if(length > 70){
+                        if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
@@ -155,7 +169,7 @@ public class FlowProManager {
                 for (File file : filesList) {
                     if (file.isFile()) {
                         length += file.getName().length();
-                        if(length > 70){
+                        if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
@@ -168,7 +182,7 @@ public class FlowProManager {
                 for (File file : filesList) {
                     if (file.isFile()) {
                         length += (" modules/optimisation/" + file.getName()).length();
-                        if(length > 70){
+                        if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
@@ -181,7 +195,7 @@ public class FlowProManager {
                 for (File file : filesList) {
                     if (file.isFile()) {
                         length += ("modules/solutionmonitor/" + file.getName()).length();
-                        if(length > 70){
+                        if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
@@ -284,7 +298,7 @@ public class FlowProManager {
                     addToParametersFile(out, "FlowPro.jar", "templates/headerDynamics.txt");
                     addToParametersFile(out, dynPath + packageNameDyn, templateDyn);
                 }
-                
+
                 if (ask("Optimisation problem [y/N]? ").equalsIgnoreCase("y")) {
                     vspace(1);
                     String dynPath = "modules/optimisation/";
@@ -401,5 +415,76 @@ public class FlowProManager {
         System.out.print(question);
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         return br.readLine();
+    }
+
+    public void setArgs(String geomName, String simulName) {
+        try (FileWriter fw = new FileWriter("args.txt")) {
+            try (BufferedWriter out = new BufferedWriter(fw)) {
+                String radka = geomName + " " + simulName;
+                out.write(radka);
+                out.newLine();
+                out.close();
+            } catch (IOException e) {
+
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
+    public String[] getListOfSimulation() {
+        LinkedList<String> list = new LinkedList<>();
+        addToList(list, "simulations");
+        int nList = list.size();
+        String[] simulList = new String[nList];
+        for (int i = 0; i < nList; i++) {
+            simulList[i] = list.get(i);
+        }
+        return simulList;
+    }
+
+    public void addToList(LinkedList<String> list, String folder) {
+        File dir = new File(folder);
+        if (dir.exists()) {
+            File[] filesList = dir.listFiles();
+            boolean insideSimulation = false;
+            for (File f : filesList) {
+                if (f.exists() && f.isDirectory() && "mesh".equals(f.getName())) {
+                    insideSimulation = true;
+                }
+            }
+            if (insideSimulation) {
+                for (File f : filesList) {
+                    if (f.exists() && f.isDirectory() && !"mesh".equals(f.getName())) {
+                        list.add(substractSim(folder) + "&" + f.getName());
+                    }
+                }
+            } else {
+                for (File f : filesList) {
+                    if (f.exists() && f.isDirectory()) {
+                        addToList(list, folder + "/" + f.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    String substractSim(String name) {
+        return name.substring(12);
+    }
+
+    public void importMesh(String problemPath, String mshFile) {
+        File mesh = new File(problemPath + "/mesh");
+        mesh.mkdir();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(mshFile))) {                   
+            int rows = 0;
+            while (reader.readLine() != null) {
+                ++rows;
+            }
+            reader.close();
+        } catch (Exception e) {
+
+        }
     }
 }
