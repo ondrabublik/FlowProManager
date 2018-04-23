@@ -5,7 +5,6 @@
  */
 package flowpromanager;
 
-import flowpro.api.Mat;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,15 +21,17 @@ public class SimulationSetup {
     public static final String STATE_FILE_NAME = "state.txt";
     public static final String REF_VALUE_FILE_NAME = "referenceValues.txt";
 
-    public String problemPath;
+    public String geometryPath;
     public String meshPath;
     public String simulationPath;
-    public String problemName;
+    public String geometryName;
     public String simulationName;
     public int nVertices;
     public int nElements;
     public int[] nElemTypes = new int[5];
     public String nElementsPrint;
+    public String date;
+    public String steps;
 
     SimulationSetup() {
         refreshSimulationPath();
@@ -49,29 +50,35 @@ public class SimulationSetup {
                     throw new IOException("file " + ARG_FILE_NAME
                             + " must contain one line with exactly two arguments");
                 }
-                problemName = args[0];
+                geometryName = args[0];
                 simulationName = args[1];
             } else {
                 throw new IOException("file " + ARG_FILE_NAME + " is empty");
             }
 
-            problemPath = "simulations/" + problemName;
-            meshPath = "simulations/" + problemName + "/mesh/";
-            simulationPath = "simulations/" + problemName + "/" + simulationName + "/";
+            geometryPath = "simulations/" + geometryName + "/";
+            meshPath = "simulations/" + geometryName + "/mesh/";
+            simulationPath = "simulations/" + geometryName + "/" + simulationName + "/";
 
         } catch (IOException e) {
             System.out.println(e);
         }
 
         try {
-            double[][] PXY = Mat.loadDoubleMatrix(meshPath + "vertices.txt"); // mesh vertices coordinates
-            nVertices = PXY.length;
-            int[] elemsType = Mat.loadIntArray(meshPath + "elementType.txt");
+            nVertices = 0;
+            BufferedReader reader = new BufferedReader(new FileReader(meshPath + "vertices.txt"));
+            while(reader.readLine() != null){
+                nVertices++;
+            }
+            reader.close();
+            
             Arrays.fill(nElemTypes, 0);
+            reader = new BufferedReader(new FileReader(meshPath + "elementType.txt"));
             nElements = 0;
-            for (int i = 0; i < elemsType.length; i++) {
+            String line;
+            while((line = reader.readLine()) != null){
                 nElements++;
-                switch (elemsType[i]) {
+                switch (Integer.parseInt(line.replaceAll(" ", ""))) {
                     case 3:
                         nElemTypes[0]++;
                         break;
@@ -89,6 +96,8 @@ public class SimulationSetup {
                         break;
                 }
             }
+            reader.close();
+            
             boolean first = true;
             nElementsPrint = nElements + " (";
             if (nElemTypes[0] > 0) {
@@ -133,12 +142,31 @@ public class SimulationSetup {
             }
             nElementsPrint += ")";
         } catch (Exception e) {
+            System.out.println(" error reading mesh ");
+        }
+        
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(simulationPath + STATE_FILE_NAME));
 
+            date = reader.readLine();
+            reader.readLine(); // transfer
+            reader.readLine(); // t
+            reader.readLine(); // CFL
+            reader.readLine(); // CPU
+            String[] tokens = (reader.readLine()).split("="); // steps
+            steps = tokens[1];
+            reader.readLine(); // residuum
+            reader.readLine(); // order
+            reader.close();
+
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 
     String getMeshName() {
-        return problemName;
+        return geometryName;
     }
 
     String getSimulationName() {

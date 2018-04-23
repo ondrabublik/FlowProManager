@@ -5,20 +5,16 @@
  */
 package flowpromanager;
 
-import flowpro.core.FlowProMain;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -35,10 +31,12 @@ public class FlowProGUI extends javax.swing.JFrame {
     public FlowProGUI() {
         fpm = new FlowProManager();
         initComponents();
+        this.setTitle("FlowPro");
+        jListMemory.setSelectedIndex(1);
         //redirectSystemStreams();
 
         setSimulationInfo();
-        setMeshList();
+        setProblemList();
     }
 
     /**
@@ -50,7 +48,6 @@ public class FlowProGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPanelFlowProGUI = new javax.swing.JTabbedPane();
         jPanelSimulation = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -59,26 +56,36 @@ public class FlowProGUI extends javax.swing.JFrame {
         jMeshName = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jSimulName = new javax.swing.JLabel();
-        jButtonSelectSimul = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPaneSimulList = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonDeleteSim = new javax.swing.JButton();
+        jButtonNewSim = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jVerticesNumber = new javax.swing.JLabel();
         jElementsNumber = new javax.swing.JLabel();
         jButtonImportMesh = new javax.swing.JButton();
+        jButtonDeleteProblem = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jDate = new javax.swing.JLabel();
+        jSteps = new javax.swing.JLabel();
         jPanelParameter = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextAreaParameters = new javax.swing.JTextArea();
         jButtonSaveParameters = new javax.swing.JButton();
+        jButtonCreateParamFile = new javax.swing.JButton();
         jPanelRun = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextAreaConsole = new javax.swing.JTextArea();
         jButtonRun = new javax.swing.JButton();
+        jRadioButton64bit = new javax.swing.JRadioButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jListMemory = new javax.swing.JList();
+        jLabel7 = new javax.swing.JLabel();
+        jRadioButtonIsParallel = new javax.swing.JRadioButton();
+        jLabelCommandRun = new javax.swing.JLabel();
         jPanelShowResult = new javax.swing.JPanel();
-        jPanelManagePackage = new javax.swing.JPanel();
+        jButtonExport = new javax.swing.JButton();
+        jLabelExportCommand = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +95,11 @@ public class FlowProGUI extends javax.swing.JFrame {
             }
         });
 
+        jScrollPaneMeshList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPaneMeshListMouseClicked(evt);
+            }
+        });
         jScrollPaneMeshList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jScrollPaneMeshListValueChanged(evt);
@@ -99,18 +111,26 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         jLabel3.setText("Simulation:");
 
-        jButtonSelectSimul.setText("select");
-        jButtonSelectSimul.addMouseListener(new java.awt.event.MouseAdapter() {
+        jScrollPaneSimulList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonSelectSimulMouseClicked(evt);
+                jScrollPaneSimulListMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jScrollPaneSimulList);
+
+        jButtonDeleteSim.setText("delete");
+        jButtonDeleteSim.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonDeleteSimMouseClicked(evt);
             }
         });
 
-        jScrollPane2.setViewportView(jScrollPaneSimulList);
-
-        jButton1.setText("delete");
-
-        jButton2.setText("new");
+        jButtonNewSim.setText("new");
+        jButtonNewSim.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonNewSimMouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("Number of vertices:");
 
@@ -122,6 +142,17 @@ public class FlowProGUI extends javax.swing.JFrame {
                 jButtonImportMeshMouseClicked(evt);
             }
         });
+
+        jButtonDeleteProblem.setText("delete");
+        jButtonDeleteProblem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonDeleteProblemMouseClicked(evt);
+            }
+        });
+
+        jLabel5.setText("Date:");
+
+        jLabel6.setText("Iterations done:");
 
         javax.swing.GroupLayout jPanelSimulationLayout = new javax.swing.GroupLayout(jPanelSimulation);
         jPanelSimulation.setLayout(jPanelSimulationLayout);
@@ -135,28 +166,31 @@ public class FlowProGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelSimulationLayout.createSequentialGroup()
+                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonNewSim, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonDeleteSim, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSimulationLayout.createSequentialGroup()
                         .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonSelectSimul, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                            .addComponent(jButtonImportMesh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                            .addComponent(jButtonImportMesh, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                            .addComponent(jButtonDeleteProblem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jVerticesNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jElementsNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jMeshName, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSimulName, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addGroup(jPanelSimulationLayout.createSequentialGroup()
-                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSteps, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(jVerticesNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(jElementsNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(jMeshName, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(jSimulName, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(jDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanelSimulationLayout.setVerticalGroup(
             jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,34 +200,42 @@ public class FlowProGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelSimulationLayout.createSequentialGroup()
                         .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanelSimulationLayout.createSequentialGroup()
-                                    .addComponent(jMeshName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jSimulName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanelSimulationLayout.createSequentialGroup()
-                                    .addComponent(jButtonSelectSimul)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButtonImportMesh)))
                             .addGroup(jPanelSimulationLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jMeshName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSimulName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelSimulationLayout.createSequentialGroup()
+                                .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonImportMesh))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonDeleteProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                            .addComponent(jVerticesNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jVerticesNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jElementsNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                            .addComponent(jElementsNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                            .addComponent(jSteps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelSimulationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelSimulationLayout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(jButtonNewSim)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonDeleteSim))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPanelFlowProGUI.addTab("simulation", jPanelSimulation);
@@ -218,15 +260,24 @@ public class FlowProGUI extends javax.swing.JFrame {
             }
         });
 
+        jButtonCreateParamFile.setText("create");
+        jButtonCreateParamFile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonCreateParamFileMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelParameterLayout = new javax.swing.GroupLayout(jPanelParameter);
         jPanelParameter.setLayout(jPanelParameterLayout);
         jPanelParameterLayout.setHorizontalGroup(
             jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelParameterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonSaveParameters, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                .addGroup(jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSaveParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonCreateParamFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelParameterLayout.setVerticalGroup(
@@ -235,18 +286,15 @@ public class FlowProGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelParameterLayout.createSequentialGroup()
+                        .addComponent(jButtonCreateParamFile)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonSaveParameters)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         jTabbedPanelFlowProGUI.addTab("parameters", jPanelParameter);
-
-        jTextAreaConsole.setEditable(false);
-        jTextAreaConsole.setColumns(20);
-        jTextAreaConsole.setRows(5);
-        jScrollPane4.setViewportView(jTextAreaConsole);
 
         jButtonRun.setText("run");
         jButtonRun.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -255,62 +303,97 @@ public class FlowProGUI extends javax.swing.JFrame {
             }
         });
 
+        jRadioButton64bit.setText("64 bit system");
+
+        jListMemory.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "2", "4", "8", "16", "32" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jListMemory);
+
+        jLabel7.setText("Memory [Gb]:");
+
+        jRadioButtonIsParallel.setText("parallel");
+
         javax.swing.GroupLayout jPanelRunLayout = new javax.swing.GroupLayout(jPanelRun);
         jPanelRun.setLayout(jPanelRunLayout);
         jPanelRunLayout.setHorizontalGroup(
             jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRunLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRunLayout.createSequentialGroup()
+                        .addComponent(jRadioButtonIsParallel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelRunLayout.createSequentialGroup()
+                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jRadioButton64bit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane4)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabelCommandRun, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 325, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanelRunLayout.setVerticalGroup(
             jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRunLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(24, 24, 24)
                 .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRunLayout.createSequentialGroup()
-                        .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
+                    .addComponent(jRadioButtonIsParallel)
+                    .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton64bit)
+                .addGap(16, 16, 16)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
+                .addComponent(jLabelCommandRun, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jTabbedPanelFlowProGUI.addTab("run", jPanelRun);
 
+        jButtonExport.setText("export");
+        jButtonExport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonExportMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelShowResultLayout = new javax.swing.GroupLayout(jPanelShowResult);
         jPanelShowResult.setLayout(jPanelShowResultLayout);
         jPanelShowResultLayout.setHorizontalGroup(
             jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 874, Short.MAX_VALUE)
+            .addGroup(jPanelShowResultLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelExportCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelShowResultLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanelShowResultLayout.setVerticalGroup(
             jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
+            .addGroup(jPanelShowResultLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 409, Short.MAX_VALUE)
+                .addComponent(jLabelExportCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jTabbedPanelFlowProGUI.addTab("show results", jPanelShowResult);
-
-        javax.swing.GroupLayout jPanelManagePackageLayout = new javax.swing.GroupLayout(jPanelManagePackage);
-        jPanelManagePackage.setLayout(jPanelManagePackageLayout);
-        jPanelManagePackageLayout.setHorizontalGroup(
-            jPanelManagePackageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 874, Short.MAX_VALUE)
-        );
-        jPanelManagePackageLayout.setVerticalGroup(
-            jPanelManagePackageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
-        );
-
-        jTabbedPanelFlowProGUI.addTab("manage packages", jPanelManagePackage);
+        jTabbedPanelFlowProGUI.addTab("export results", jPanelShowResult);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPanelFlowProGUI)
+            .addComponent(jTabbedPanelFlowProGUI, javax.swing.GroupLayout.PREFERRED_SIZE, 852, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,7 +404,6 @@ public class FlowProGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTabbedPanelFlowProGUIStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPanelFlowProGUIStateChanged
-        // TODO add your handling code here:
         switch (jTabbedPanelFlowProGUI.getSelectedIndex()) {
             case 1:
                 File file = new File(fpm.simulSetup.simulationPath + "parameters.txt");
@@ -352,7 +434,6 @@ public class FlowProGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanelParameterMouseClicked
 
     private void jButtonSaveParametersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonSaveParametersMouseClicked
-        // TODO add your handling code here:
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fpm.simulSetup.simulationPath + "parameters.txt"))) {
             jTextAreaParameters.write(writer);
             writer.close();
@@ -361,38 +442,47 @@ public class FlowProGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonSaveParametersMouseClicked
 
-    private void jButtonSelectSimulMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonSelectSimulMouseClicked
-        // TODO add your handling code here:
-        int meshIndex = jScrollPaneMeshList.getSelectedIndex();
-        int simulIndex = jScrollPaneSimulList.getSelectedIndex();
-        if (meshIndex > -1) {
-            if (simulIndex > -1) {
-                fpm.setArgs((String) jScrollPaneMeshList.getSelectedValue(), (String) jScrollPaneSimulList.getSelectedValue());
-                //setMeshList();
-                setSimulationInfo();
-            }
-        }
-    }//GEN-LAST:event_jButtonSelectSimulMouseClicked
-
     private void jScrollPaneMeshListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jScrollPaneMeshListValueChanged
-        // TODO add your handling code here:
         if (jScrollPaneMeshList.getSelectedIndex() > -1) {
             setSimulationList((String) jScrollPaneMeshList.getSelectedValue());
         }
     }//GEN-LAST:event_jScrollPaneMeshListValueChanged
 
     private void jButtonRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonRunMouseClicked
-        // TODO add your handling code here:
+        String command = "java";
+        if (jRadioButton64bit.isSelected()) {
+            command += " -d64";
+        }
+        command += " -Xmx" + jListMemory.getSelectedValue() + "g";
+        command += " -jar FlowPro.jar local";
+        jLabelCommandRun.setText("java command: " + command);
+//            try {
+//                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", command);
+//                Process pro = pb.start();
+//                //Process pro = Runtime.getRuntime().exec(command);
+//                //pro.waitFor();
+//                System.out.println(command + " exitValue() " + pro.exitValue());
+//            } catch (IOException ex) {
+//
+//            }
         try {
-            FlowProMain.main(new String[]{"local"});
+            Runtime rt = Runtime.getRuntime();
+            //Process pr = rt.exec("cmd /c dir");
+            Process pr = rt.exec(command);
+            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line = null;
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+            int exitVal = pr.waitFor();
+            System.out.println("Exited with error code " + exitVal);
         } catch (Exception e) {
-
+            System.out.println(e);
         }
 //        runProcess("java -d64 -Xmx8g -jar FlowPro.jar local");
     }//GEN-LAST:event_jButtonRunMouseClicked
 
     private void jButtonImportMeshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonImportMeshMouseClicked
-        // TODO add your handling code here:
         JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
         jfc.setDialogTitle("Choose mesh file: ");
         jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -404,39 +494,143 @@ public class FlowProGUI extends javax.swing.JFrame {
             if (jfc.getSelectedFile().isFile()) {
                 String geomName = JOptionPane.showInputDialog("Insert new geometry name");
                 File file = new File("simulations/" + geomName);
-                if(file.exists()){
+                if (file.exists()) {
                     //JOptionPane.showMessageDialog(null, "The name alllready exists. Owerride?");
                     int conf = JOptionPane.showConfirmDialog(null, "The name alllready exists. Owerride?");
-                    if(conf > 0){
+                    if (conf > 0) {
                         return;
                     }
-                } else{
-                   file.mkdir(); 
+                } else {
+                    file.mkdir();
                 }
-                fpm.importMesh("simulations/" + geomName, jfc.getSelectedFile().getPath());
+                fpm.importMesh("simulations/" + geomName + "/", jfc.getSelectedFile().getPath());
+                fpm.setArgs(geomName, "default");
             }
         }
+        // refresh problem list
+        setProblemList();
     }//GEN-LAST:event_jButtonImportMeshMouseClicked
+
+    private void jButtonDeleteProblemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonDeleteProblemMouseClicked
+        int conf = JOptionPane.showConfirmDialog(null, "Are you sure to delete " + fpm.simulSetup.geometryName + " ?");
+        if (conf == 0) {
+            File dir = new File(fpm.simulSetup.geometryPath);
+            if (!deleteDirectory(dir)) {
+                JOptionPane.showMessageDialog(null, "Folder " + fpm.simulSetup.geometryName + " could not be deleted!");
+            }
+        }
+        // refresh problem list
+        setProblemList();
+    }//GEN-LAST:event_jButtonDeleteProblemMouseClicked
+
+    private void jButtonNewSimMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonNewSimMouseClicked
+        String simName = JOptionPane.showInputDialog("Insert new simulation name");
+        File file = new File(fpm.simulSetup.geometryPath + simName);
+        if (file.exists()) {
+            int conf = JOptionPane.showConfirmDialog(null, "The simulation " + simName + " allready exists. Owerride?");
+            if (conf > 0) {
+                return;
+            }
+        } else {
+            file.mkdir();
+        }
+        //fpm.setArgs(geomName, "default");
+
+        // refresh problem list
+        setSimulationList(fpm.simulSetup.geometryName);
+    }//GEN-LAST:event_jButtonNewSimMouseClicked
+
+    private void jScrollPaneMeshListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPaneMeshListMouseClicked
+        int meshIndex = jScrollPaneMeshList.getSelectedIndex();
+        int simulIndex = jScrollPaneSimulList.getSelectedIndex();
+        if (meshIndex > -1) {
+            if (simulIndex > -1) {
+                fpm.setArgs((String) jScrollPaneMeshList.getSelectedValue(), (String) jScrollPaneSimulList.getSelectedValue());
+                //setMeshList();
+                setSimulationInfo();
+            }
+        }
+    }//GEN-LAST:event_jScrollPaneMeshListMouseClicked
+
+    private void jScrollPaneSimulListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPaneSimulListMouseClicked
+        int meshIndex = jScrollPaneMeshList.getSelectedIndex();
+        int simulIndex = jScrollPaneSimulList.getSelectedIndex();
+        if (meshIndex > -1) {
+            if (simulIndex > -1) {
+                fpm.setArgs((String) jScrollPaneMeshList.getSelectedValue(), (String) jScrollPaneSimulList.getSelectedValue());
+                //setMeshList();
+                setSimulationInfo();
+            }
+        }
+    }//GEN-LAST:event_jScrollPaneSimulListMouseClicked
+
+    private void jButtonDeleteSimMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonDeleteSimMouseClicked
+        int conf = JOptionPane.showConfirmDialog(null, "Are you sure to delete " + fpm.simulSetup.simulationName + " ?");
+        if (conf == 0) {
+            String simName = fpm.simulSetup.simulationName;
+            File dir = new File(fpm.simulSetup.simulationPath);
+            System.out.println(fpm.simulSetup.simulationPath);
+            if (simName.equals("default")) {
+                JOptionPane.showMessageDialog(null, "Empty default simulation was created.");
+                if (simName.equals("default")) {
+                    dir = new File(fpm.simulSetup.simulationPath + "default");
+                    dir.mkdir();
+
+                }
+            } else {
+                if (!deleteDirectory(dir)) {
+                    JOptionPane.showMessageDialog(null, "Folder " + fpm.simulSetup.simulationName + " could not be deleted!");
+                }
+            }
+        }
+        // refresh problem list
+        setSimulationList(fpm.simulSetup.geometryName);
+        setSimulationInfo();
+    }//GEN-LAST:event_jButtonDeleteSimMouseClicked
+
+    private void jButtonCreateParamFileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCreateParamFileMouseClicked
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CreateParametersFile(fpm.simulSetup.simulationPath).setVisible(true);
+            }
+        });
+    }//GEN-LAST:event_jButtonCreateParamFileMouseClicked
+
+    private void jButtonExportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonExportMouseClicked
+        String command = "java -jar FlowPro.jar postprocessing ";
+        jLabelExportCommand.setText("java command: " + command);
+    }//GEN-LAST:event_jButtonExportMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonCreateParamFile;
+    private javax.swing.JButton jButtonDeleteProblem;
+    private javax.swing.JButton jButtonDeleteSim;
+    private javax.swing.JButton jButtonExport;
     private javax.swing.JButton jButtonImportMesh;
+    private javax.swing.JButton jButtonNewSim;
     private javax.swing.JButton jButtonRun;
     private javax.swing.JButton jButtonSaveParameters;
-    private javax.swing.JButton jButtonSelectSimul;
+    private javax.swing.JLabel jDate;
     private javax.swing.JLabel jElementsNumber;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelCommandRun;
+    private javax.swing.JLabel jLabelExportCommand;
+    private javax.swing.JList jListMemory;
     private javax.swing.JLabel jMeshName;
-    private javax.swing.JPanel jPanelManagePackage;
     private javax.swing.JPanel jPanelParameter;
     private javax.swing.JPanel jPanelRun;
     private javax.swing.JPanel jPanelShowResult;
     private javax.swing.JPanel jPanelSimulation;
+    private javax.swing.JRadioButton jRadioButton64bit;
+    private javax.swing.JRadioButton jRadioButtonIsParallel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -444,9 +638,8 @@ public class FlowProGUI extends javax.swing.JFrame {
     private javax.swing.JList jScrollPaneMeshList;
     private javax.swing.JList jScrollPaneSimulList;
     private javax.swing.JLabel jSimulName;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel jSteps;
     private javax.swing.JTabbedPane jTabbedPanelFlowProGUI;
-    private javax.swing.JTextArea jTextAreaConsole;
     private javax.swing.JTextArea jTextAreaParameters;
     private javax.swing.JLabel jVerticesNumber;
     // End of variables declaration//GEN-END:variables
@@ -457,9 +650,11 @@ public class FlowProGUI extends javax.swing.JFrame {
         jSimulName.setText(fpm.simulSetup.getSimulationName());
         jVerticesNumber.setText(Integer.toString(fpm.simulSetup.nVertices));
         jElementsNumber.setText(fpm.simulSetup.nElementsPrint);
+        jDate.setText(fpm.simulSetup.date);
+        jSteps.setText(fpm.simulSetup.steps);
     }
 
-    void setMeshList() {
+    void setProblemList() {
         listOfSimulations = fpm.getListOfSimulation();
         int nSimulation = 0;
         String pom = "";
@@ -512,48 +707,44 @@ public class FlowProGUI extends javax.swing.JFrame {
         jScrollPaneSimulList.setSelectedIndex(0);
     }
 
-    //The following codes set where the text get redirected. In this case, jTextArea1    
-    private void updateTextAreaConsole(final String text) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                jTextAreaConsole.append(text);
+//    //The following codes set where the text get redirected. In this case, jTextArea1    
+//    private void updateTextAreaConsole(final String text) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                jTextAreaConsole.append(text);
+//            }
+//        });
+//    }
+//    //Followings are The Methods that do the Redirect, you can simply Ignore them. 
+//    public void redirectSystemStreams() {
+//        OutputStream out = new OutputStream() {
+//            @Override
+//            public void write(int b) throws IOException {
+//                updateTextAreaConsole(String.valueOf((char) b));
+//            }
+//
+//            @Override
+//            public void write(byte[] b, int off, int len) throws IOException {
+//                updateTextAreaConsole(new String(b, off, len));
+//            }
+//
+//            @Override
+//            public void write(byte[] b) throws IOException {
+//                write(b, 0, b.length);
+//            }
+//        };
+//
+//        System.setOut(new PrintStream(out, true));
+//        System.setErr(new PrintStream(out, true));
+//    }
+    boolean deleteDirectory(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
             }
-        });
-    }
-
-    //Followings are The Methods that do the Redirect, you can simply Ignore them. 
-    public void redirectSystemStreams() {
-        OutputStream out = new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                updateTextAreaConsole(String.valueOf((char) b));
-            }
-
-            @Override
-            public void write(byte[] b, int off, int len) throws IOException {
-                updateTextAreaConsole(new String(b, off, len));
-            }
-
-            @Override
-            public void write(byte[] b) throws IOException {
-                write(b, 0, b.length);
-            }
-        };
-
-        System.setOut(new PrintStream(out, true));
-        System.setErr(new PrintStream(out, true));
-    }
-
-    private void runProcess(String command) {
-        try {
-            Process pro = Runtime.getRuntime().exec(command);
-            pro.waitFor();
-            System.out.println(command + " exitValue() " + pro.exitValue());
-        } catch (InterruptedException ex) {
-            System.err.println(ex);
-        } catch (IOException ex) {
-
         }
+        return directoryToBeDeleted.delete();
     }
 }
