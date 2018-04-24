@@ -1,7 +1,7 @@
 # FlowProManager
 FlowProManager manage the FlowPro packages and provides FlowPro GUI
 
-# Compilation
+# Built With
 * ant
 
 # Usage
