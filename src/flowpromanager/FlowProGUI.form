@@ -23,12 +23,25 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPanelFlowProGUI" min="-2" pref="852" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Component id="jTabbedPanelFlowProGUI" min="-2" pref="852" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane6" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPanelFlowProGUI" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jTabbedPanelFlowProGUI" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane6" pref="160" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -291,17 +304,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-<<<<<<< HEAD
                       <Component id="jScrollPane3" min="-2" pref="731" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButtonSaveParameters" pref="78" max="32767" attributes="0"/>
-=======
-                      <Component id="jScrollPane3" min="-2" pref="759" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jButtonSaveParameters" max="32767" attributes="0"/>
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                           <Component id="jButtonCreateParamFile" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -481,7 +487,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-<<<<<<< HEAD
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -509,14 +514,6 @@
                               <EmptySpace min="0" pref="178" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-=======
-                      <Component id="jLabelExportCommand" min="-2" pref="649" max="-2" attributes="0"/>
-                      <EmptySpace pref="188" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jButtonExport" min="-2" pref="100" max="-2" attributes="0"/>
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -525,7 +522,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-<<<<<<< HEAD
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jButtonExport" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
@@ -544,10 +540,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jTextFieldAddToCommandResults" min="-2" pref="31" max="-2" attributes="0"/>
                       <EmptySpace pref="94" max="32767" attributes="0"/>
-=======
-                      <Component id="jButtonExport" min="-2" pref="35" max="-2" attributes="0"/>
-                      <EmptySpace pref="409" max="32767" attributes="0"/>
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                       <Component id="jLabelExportCommand" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -565,7 +557,6 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelExportCommand">
             </Component>
-<<<<<<< HEAD
             <Container class="javax.swing.JScrollPane" name="jScrollPane5">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -606,10 +597,23 @@
                 <Property name="text" type="java.lang.String" value="Add to command:"/>
               </Properties>
             </Component>
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
           </SubComponents>
         </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane6">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextAreaOutput">
+          <Properties>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

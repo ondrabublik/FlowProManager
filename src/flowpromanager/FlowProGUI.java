@@ -5,27 +5,21 @@
  */
 package flowpromanager;
 
-<<<<<<< HEAD
 import flowpro.api.FlowProProperties;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-=======
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-<<<<<<< HEAD
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -49,6 +43,11 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         setSimulationInfo();
         setProblemList();
+        
+        // redirecting standart output
+        PrintStream printStream = new PrintStream(new CustomOutputStream(jTextAreaOutput));
+        System.setOut(printStream);
+        System.setErr(printStream);
     }
 
     /**
@@ -98,7 +97,6 @@ public class FlowProGUI extends javax.swing.JFrame {
         jPanelShowResult = new javax.swing.JPanel();
         jButtonExport = new javax.swing.JButton();
         jLabelExportCommand = new javax.swing.JLabel();
-<<<<<<< HEAD
         jScrollPane5 = new javax.swing.JScrollPane();
         jListResults = new javax.swing.JList();
         jLabel8 = new javax.swing.JLabel();
@@ -107,8 +105,8 @@ public class FlowProGUI extends javax.swing.JFrame {
         jTextFieldItteration = new javax.swing.JTextField();
         jTextFieldAddToCommandResults = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTextAreaOutput = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -296,17 +294,10 @@ public class FlowProGUI extends javax.swing.JFrame {
             jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelParameterLayout.createSequentialGroup()
                 .addContainerGap()
-<<<<<<< HEAD
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonSaveParameters, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-=======
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelParameterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSaveParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                     .addComponent(jButtonCreateParamFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -394,7 +385,6 @@ public class FlowProGUI extends javax.swing.JFrame {
             }
         });
 
-<<<<<<< HEAD
         jScrollPane5.setViewportView(jListResults);
 
         jLabel8.setText("Select results:");
@@ -405,15 +395,12 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         jLabel10.setText("Add to command:");
 
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
         javax.swing.GroupLayout jPanelShowResultLayout = new javax.swing.GroupLayout(jPanelShowResult);
         jPanelShowResult.setLayout(jPanelShowResultLayout);
         jPanelShowResultLayout.setHorizontalGroup(
             jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelShowResultLayout.createSequentialGroup()
                 .addContainerGap()
-<<<<<<< HEAD
                 .addGroup(jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelShowResultLayout.createSequentialGroup()
                         .addGroup(jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -434,20 +421,12 @@ public class FlowProGUI extends javax.swing.JFrame {
                                 .addGap(126, 126, 126)
                                 .addComponent(jTextFieldItteration, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 178, Short.MAX_VALUE)))
-=======
-                .addComponent(jLabelExportCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelShowResultLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                 .addContainerGap())
         );
         jPanelShowResultLayout.setVerticalGroup(
             jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelShowResultLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-<<<<<<< HEAD
                 .addGroup(jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelShowResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -463,25 +442,35 @@ public class FlowProGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldAddToCommandResults, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
-=======
-                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 409, Short.MAX_VALUE)
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
                 .addComponent(jLabelExportCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jTabbedPanelFlowProGUI.addTab("export results", jPanelShowResult);
 
+        jTextAreaOutput.setColumns(20);
+        jTextAreaOutput.setRows(5);
+        jScrollPane6.setViewportView(jTextAreaOutput);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPanelFlowProGUI, javax.swing.GroupLayout.PREFERRED_SIZE, 852, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPanelFlowProGUI, javax.swing.GroupLayout.PREFERRED_SIZE, 852, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPanelFlowProGUI)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPanelFlowProGUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -506,7 +495,6 @@ public class FlowProGUI extends javax.swing.JFrame {
                     jTextAreaParameters.setCaretPosition(0);
                 }
                 break;
-<<<<<<< HEAD
             case 3:
                 try {
                     FlowProProperties props = new FlowProProperties();
@@ -517,8 +505,6 @@ public class FlowProGUI extends javax.swing.JFrame {
 
                 }
                 break;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
         }
     }//GEN-LAST:event_jTabbedPanelFlowProGUIStateChanged
 
@@ -553,18 +539,6 @@ public class FlowProGUI extends javax.swing.JFrame {
         command += " -Xmx" + jListMemory.getSelectedValue() + "g";
         command += " -jar FlowPro.jar local";
         jLabelCommandRun.setText("java command: " + command);
-<<<<<<< HEAD
-=======
-//            try {
-//                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", command);
-//                Process pro = pb.start();
-//                //Process pro = Runtime.getRuntime().exec(command);
-//                //pro.waitFor();
-//                System.out.println(command + " exitValue() " + pro.exitValue());
-//            } catch (IOException ex) {
-//
-//            }
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
         try {
             Runtime rt = Runtime.getRuntime();
             //Process pr = rt.exec("cmd /c dir");
@@ -699,7 +673,6 @@ public class FlowProGUI extends javax.swing.JFrame {
 
     private void jButtonExportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonExportMouseClicked
         String command = "java -jar FlowPro.jar postprocessing ";
-<<<<<<< HEAD
         List values = jListResults.getSelectedValuesList();
         for(Object value: values){
             command += (String)value + " ";
@@ -730,9 +703,6 @@ public class FlowProGUI extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println(e);
         }
-=======
-        jLabelExportCommand.setText("java command: " + command);
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
     }//GEN-LAST:event_jButtonExportMouseClicked
 
 
@@ -748,28 +718,19 @@ public class FlowProGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jDate;
     private javax.swing.JLabel jElementsNumber;
     private javax.swing.JLabel jLabel1;
-<<<<<<< HEAD
     private javax.swing.JLabel jLabel10;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-<<<<<<< HEAD
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCommandRun;
     private javax.swing.JLabel jLabelExportCommand;
     private javax.swing.JList jListMemory;
     private javax.swing.JList jListResults;
-=======
-    private javax.swing.JLabel jLabelCommandRun;
-    private javax.swing.JLabel jLabelExportCommand;
-    private javax.swing.JList jListMemory;
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
     private javax.swing.JLabel jMeshName;
     private javax.swing.JPanel jPanelParameter;
     private javax.swing.JPanel jPanelRun;
@@ -777,29 +738,22 @@ public class FlowProGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelSimulation;
     private javax.swing.JRadioButton jRadioButton64bit;
     private javax.swing.JRadioButton jRadioButtonIsParallel;
-<<<<<<< HEAD
     private javax.swing.JRadioButton jRadioButtonToVTK;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-<<<<<<< HEAD
     private javax.swing.JScrollPane jScrollPane5;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JList jScrollPaneMeshList;
     private javax.swing.JList jScrollPaneSimulList;
     private javax.swing.JLabel jSimulName;
     private javax.swing.JLabel jSteps;
     private javax.swing.JTabbedPane jTabbedPanelFlowProGUI;
+    private javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextArea jTextAreaParameters;
-<<<<<<< HEAD
     private javax.swing.JTextField jTextFieldAddToCommandResults;
     private javax.swing.JTextField jTextFieldItteration;
-=======
->>>>>>> 08dfdcf854499ab284ba79799bf6b43e8b7bdb74
     private javax.swing.JLabel jVerticesNumber;
     // End of variables declaration//GEN-END:variables
 
@@ -905,5 +859,24 @@ public class FlowProGUI extends javax.swing.JFrame {
             }
         }
         return directoryToBeDeleted.delete();
+    }
+    
+    public class CustomOutputStream extends OutputStream {
+
+        private JTextArea textArea;
+
+        public CustomOutputStream(JTextArea textArea) {
+            this.textArea = textArea;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            // redirects data to the text area
+            textArea.append(String.valueOf((char) b));
+            // scrolls the text area to the end of data
+            //textArea.setCaretPosition(textArea.getDocument().getLength());
+            // keeps the textArea up to date
+            textArea.update(textArea.getGraphics());
+        }
     }
 }

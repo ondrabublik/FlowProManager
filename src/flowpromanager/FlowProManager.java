@@ -151,56 +151,19 @@ public class FlowProManager {
                         out.write(" lib/" + file.getName());
                     }
                 }
-                dir = new File("./modules/equations");
-                filesList = dir.listFiles();
-                for (File file : filesList) {
+                
+                dir = new File("modules");
+                List<File> filesL = addFiles(null, dir);
+                //filesList = dir.listFiles();
+                for (File file : filesL) {
                     if (file.isFile()) {
-                        length += (" modules/equations/" + file.getName()).length();
+                        length += (" modules/" + file.getName()).length();
                         if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
                         }
-                        out.write(" modules/equations/" + file.getName());
-                    }
-                }
-                dir = new File("./modules/dynamics");
-                filesList = dir.listFiles();
-                for (File file : filesList) {
-                    if (file.isFile()) {
-                        length += file.getName().length();
-                        if (length > 70) {
-                            length = 0;
-                            out.write(" ");
-                            out.newLine();
-                        }
-                        out.write(" modules/dynamics/" + file.getName());
-                    }
-                }
-                dir = new File("./modules/optimisation");
-                filesList = dir.listFiles();
-                for (File file : filesList) {
-                    if (file.isFile()) {
-                        length += (" modules/optimisation/" + file.getName()).length();
-                        if (length > 70) {
-                            length = 0;
-                            out.write(" ");
-                            out.newLine();
-                        }
-                        out.write(" modules/optimisation/" + file.getName());
-                    }
-                }
-                dir = new File("./modules/solutionmonitor");
-                filesList = dir.listFiles();
-                for (File file : filesList) {
-                    if (file.isFile()) {
-                        length += ("modules/solutionmonitor/" + file.getName()).length();
-                        if (length > 70) {
-                            length = 0;
-                            out.write(" ");
-                            out.newLine();
-                        }
-                        out.write(" modules/solutionmonitor/" + file.getName());
+                        out.write(" modules/" + file.getName());
                     }
                 }
                 out.newLine();
@@ -478,35 +441,35 @@ public class FlowProManager {
         mesh.mkdir();
         File sim = new File(geometryPath + "default");
         sim.mkdir();
-        try (BufferedReader reader = new BufferedReader(new FileReader(mshFile))) {        
+        try (BufferedReader reader = new BufferedReader(new FileReader(mshFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // read nodes
-                if(line.equals("$Nodes")){
+                if (line.equals("$Nodes")) {
                     int nVertices = Integer.parseInt(reader.readLine());
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(geometryPath + "mesh/vertices.txt"))) {
-                        for(int i = 0; i < nVertices; i++){
+                        for (int i = 0; i < nVertices; i++) {
                             line = reader.readLine();
                             String[] tokens = line.split(" ");
                             writer.write(tokens[1] + " " + tokens[2] + " " + tokens[3]);
                             writer.newLine();
                         }
                         writer.close();
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println(" Error when reading vertices from .msh file! ");
                     }
                 }
                 // read elements, elements type and boundary conditions
-                if(line.equals("$Elements")){
+                if (line.equals("$Elements")) {
                     int nElements = Integer.parseInt(reader.readLine());
                     try {
                         BufferedWriter eLementWriter = new BufferedWriter(new FileWriter(geometryPath + "mesh/elements.txt"));
                         BufferedWriter typeWriter = new BufferedWriter(new FileWriter(geometryPath + "mesh/elementType.txt"));
                         BufferedWriter boundaryWriter = new BufferedWriter(new FileWriter(geometryPath + "mesh/boundaryType.txt"));
-                        for(int i = 0; i < nElements; i++){
+                        for (int i = 0; i < nElements; i++) {
                             line = reader.readLine();
                             String[] tokens = line.split(" ");
-                            switch(Integer.parseInt(tokens[1])){
+                            switch (Integer.parseInt(tokens[1])) {
                                 case 1:
                                     boundaryWriter.write("-" + tokens[3] + " " + tokens[5] + " " + tokens[6]);
                                     boundaryWriter.newLine();
@@ -523,13 +486,13 @@ public class FlowProManager {
                                     typeWriter.write("4");
                                     typeWriter.newLine();
                                     break;
-                                    
+
                             }
                         }
                         eLementWriter.close();
                         typeWriter.close();
                         boundaryWriter.close();
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println(" Error when reading vertices from .msh file! ");
                     }
                 }
@@ -538,5 +501,19 @@ public class FlowProManager {
         } catch (Exception e) {
 
         }
+    }
+
+    public static List<File> addFiles(List<File> files, File dir) {
+        if (files == null) {
+            files = new LinkedList<File>();
+        }
+        if (!dir.isDirectory()) {
+            files.add(dir);
+            return files;
+        }
+        for (File file : dir.listFiles()) {
+            addFiles(files, file);
+        }
+        return files;
     }
 }
