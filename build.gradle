@@ -13,6 +13,15 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = ''
 }
 
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'flowpromanager.FlowProManager',
+            'Class-Path': ""
+        )
+    }
+}
+
 dependencies {
     // TODO: Add dependencies here
     //   but note that JUnit should have already been added in parent.gradle.

@@ -154,16 +154,16 @@ public class FlowProManager {
                 
                 dir = new File("modules");
                 List<File> filesL = addFiles(null, dir);
-                //filesList = dir.listFiles();
                 for (File file : filesL) {
                     if (file.isFile()) {
-                        length += (" modules/" + file.getName()).length();
+                        String relativeJarPath = file.toPath().toString();
+                        length += relativeJarPath.length();
                         if (length > 70) {
                             length = 0;
                             out.write(" ");
                             out.newLine();
                         }
-                        out.write(" modules/" + file.getName());
+                        out.write(" " + relativeJarPath);
                     }
                 }
                 out.newLine();
