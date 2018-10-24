@@ -17,7 +17,7 @@ jar {
     manifest {
         attributes(
             'Main-Class': 'flowpromanager.FlowProManager',
-            'Class-Path': ""
+            'Class-Path': "FlowPro.jar"
         )
     }
 }

@@ -25,6 +25,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -85,7 +86,7 @@ public class FlowProManager {
                 break;
 
             case "gui": // start GUI
-                java.awt.EventQueue.invokeLater(new Runnable() {
+                SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         new FlowProGUI().setVisible(true);
                     }
