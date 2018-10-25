@@ -13,6 +13,17 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = ''
 }
 
+repositories {
+    flatDir {
+        dirs "${project(':FlowPro').projectDir}/lib"
+    }
+}
+
+dependencies {
+    compile name: "Fetcher"
+    //implementation fileTree(dir: "${project(':FlowPro').projectDir}/lib", include: ['*.jar'])
+}
+
 jar {
     manifest {
         attributes(
@@ -20,14 +31,4 @@ jar {
             'Class-Path': "FlowPro.jar"
         )
     }
-}
-
-dependencies {
-    // TODO: Add dependencies here
-    //   but note that JUnit should have already been added in parent.gradle.
-    //   By default, only the Maven Central Repository is specified in
-    //   parent.gradle.
-    //
-    // You can read more about how to add dependency here:
-    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
 }

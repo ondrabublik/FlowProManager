@@ -16,8 +16,11 @@ import java.io.InputStreamReader;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import fetcher.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  *
@@ -28,6 +31,8 @@ public class FlowProGUI extends javax.swing.JFrame {
     FlowProManager fpm;
     String[] listOfSimulations;
     String command;
+
+    Process pr;
 
     /**
      * Creates new form FlowProGUI
@@ -42,6 +47,15 @@ public class FlowProGUI extends javax.swing.JFrame {
         setSimulationInfo();
         setProblemList();
 
+        // redirecting System.out.println to console
+        PrintStream out = new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                jTextAreaOutput.append("" + (char) (b & 0xFF));
+                jTextAreaOutput.setCaretPosition(jTextAreaOutput.getDocument().getLength());
+            }
+        });
+        System.setOut(out);
     }
 
     /**
@@ -88,6 +102,13 @@ public class FlowProGUI extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jRadioButtonIsParallel = new javax.swing.JRadioButton();
         jLabelCommandRun = new javax.swing.JLabel();
+        jButtonBreakComputation = new javax.swing.JButton();
+        jButtonCheckPC = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jTextFieldNumberOfPC = new javax.swing.JTextField();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextAreaPCWorkersList = new javax.swing.JTextArea();
+        jLabel12 = new javax.swing.JLabel();
         jPanelShowResult = new javax.swing.JPanel();
         jButtonExport = new javax.swing.JButton();
         jLabelExportCommand = new javax.swing.JLabel();
@@ -306,7 +327,7 @@ public class FlowProGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonSaveParameters)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -330,7 +351,31 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         jLabel7.setText("Memory [Gb]:");
 
-        jRadioButtonIsParallel.setText("parallel");
+        jRadioButtonIsParallel.setText("distributed");
+
+        jButtonBreakComputation.setText("break");
+        jButtonBreakComputation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonBreakComputationMouseClicked(evt);
+            }
+        });
+
+        jButtonCheckPC.setText("check");
+        jButtonCheckPC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonCheckPCMouseClicked(evt);
+            }
+        });
+
+        jLabel11.setText("number of PC:");
+
+        jTextFieldNumberOfPC.setText("1");
+
+        jTextAreaPCWorkersList.setColumns(20);
+        jTextAreaPCWorkersList.setRows(5);
+        jScrollPane7.setViewportView(jTextAreaPCWorkersList);
+
+        jLabel12.setText("Available workers:");
 
         javax.swing.GroupLayout jPanelRunLayout = new javax.swing.GroupLayout(jPanelRun);
         jPanelRun.setLayout(jPanelRunLayout);
@@ -339,34 +384,58 @@ public class FlowProGUI extends javax.swing.JFrame {
             .addGroup(jPanelRunLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelCommandRun, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelRunLayout.createSequentialGroup()
-                        .addComponent(jRadioButtonIsParallel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelRunLayout.createSequentialGroup()
-                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jRadioButton64bit)
                             .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jRadioButton64bit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane4)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabelCommandRun, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 325, Short.MAX_VALUE)))
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)))
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanelRunLayout.createSequentialGroup()
+                                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jRadioButtonIsParallel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonCheckPC, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldNumberOfPC)))
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane7))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 223, Short.MAX_VALUE)
+                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonRun, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(jButtonBreakComputation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelRunLayout.setVerticalGroup(
             jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRunLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jRadioButtonIsParallel)
-                    .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jRadioButton64bit)
-                .addGap(16, 16, 16)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
+                    .addComponent(jRadioButton64bit)
+                    .addComponent(jButtonCheckPC))
+                .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRunLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonBreakComputation, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelRunLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldNumberOfPC, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelRunLayout.createSequentialGroup()
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
                 .addComponent(jLabelCommandRun, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -384,6 +453,7 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         jLabel8.setText("Select results:");
 
+        jRadioButtonToVTK.setSelected(true);
         jRadioButtonToVTK.setText("VTK format");
 
         jLabel9.setText("iteration:");
@@ -444,7 +514,7 @@ public class FlowProGUI extends javax.swing.JFrame {
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldAddToCommandResults, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
                 .addComponent(jLabelExportCommand, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -475,7 +545,7 @@ public class FlowProGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPanelFlowProGUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -543,7 +613,12 @@ public class FlowProGUI extends javax.swing.JFrame {
             command += " -d64";
         }
         command += " -Xmx" + jListMemory.getSelectedValue() + "g";
-        command += " -jar FlowPro.jar local";
+
+        if (jRadioButtonIsParallel.isSelected()) { // paralell/local mode
+            command += " -jar FlowPro.jar master " + jTextFieldNumberOfPC.getText();
+        } else {
+            command += " -jar FlowPro.jar local";
+        }
         jLabelCommandRun.setText("java command: " + command);
         jTextAreaOutput.setText("");
         jTextAreaOutput.update(jTextAreaOutput.getGraphics());
@@ -552,8 +627,7 @@ public class FlowProGUI extends javax.swing.JFrame {
             public void run() {
                 try {
                     Runtime rt = Runtime.getRuntime();
-                    //Process pr = rt.exec("cmd /c dir");
-                    Process pr = rt.exec(command);
+                    pr = rt.exec(command);
                     BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
                     String line = null;
                     while ((line = input.readLine()) != null) {
@@ -584,7 +658,7 @@ public class FlowProGUI extends javax.swing.JFrame {
                 File file = new File("simulations/" + geomName);
                 if (file.exists()) {
                     //JOptionPane.showMessageDialog(null, "The name alllready exists. Owerride?");
-                    int conf = JOptionPane.showConfirmDialog(null, "The name alllready exists. Owerride?");
+                    int conf = JOptionPane.showConfirmDialog(null, "The name alllready exists. Override?");
                     if (conf > 0) {
                         return;
                     }
@@ -703,7 +777,7 @@ public class FlowProGUI extends javax.swing.JFrame {
 
         jLabelExportCommand.setText("java command: " + command);
         printClean("");
-        
+
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -729,15 +803,49 @@ public class FlowProGUI extends javax.swing.JFrame {
                 try {
                     Runtime rt = Runtime.getRuntime();
                     rt.exec("paraview " + fpm.simulSetup.simulationPath + "output/results.vtk");
-                } catch (Exception e){
+                } catch (Exception e) {
                     print("Can not open paraview!");
                 }
             }
         }).start();
     }//GEN-LAST:event_jButtonOpenParaviewMouseClicked
 
+    private void jButtonBreakComputationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonBreakComputationMouseClicked
+        try {
+            pr.destroy();
+        } catch (Exception e) {
+            print(e.toString());
+        }
+    }//GEN-LAST:event_jButtonBreakComputationMouseClicked
+
+    private void jButtonCheckPCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCheckPCMouseClicked
+        if (jRadioButtonIsParallel.isSelected()) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        FetcherServer fetcher = new FetcherServer();
+                        fetcher.initChecker();
+                        fetcher.start();
+                        Thread.sleep(3000);
+                        List<String> workerList = fetcher.getCheckedList();
+                        jTextAreaPCWorkersList.setText("");
+                        workerList.stream().forEach((worker) -> {
+                            jTextAreaPCWorkersList.append(worker + "\n");
+                        });
+                    } catch (Exception e) {
+                        print("Can not run fetcher!");
+                    }
+                }
+            }).start();
+        } else {
+            print("Option 'distributed' must be checked for distributed computations!");
+        }
+    }//GEN-LAST:event_jButtonCheckPCMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBreakComputation;
+    private javax.swing.JButton jButtonCheckPC;
     private javax.swing.JButton jButtonCreateParamFile;
     private javax.swing.JButton jButtonDeleteProblem;
     private javax.swing.JButton jButtonDeleteSim;
@@ -751,6 +859,8 @@ public class FlowProGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jElementsNumber;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -777,15 +887,18 @@ public class FlowProGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JList jScrollPaneMeshList;
     private javax.swing.JList jScrollPaneSimulList;
     private javax.swing.JLabel jSimulName;
     private javax.swing.JLabel jSteps;
     private javax.swing.JTabbedPane jTabbedPanelFlowProGUI;
     private javax.swing.JTextArea jTextAreaOutput;
+    private javax.swing.JTextArea jTextAreaPCWorkersList;
     private javax.swing.JTextArea jTextAreaParameters;
     private javax.swing.JTextField jTextFieldAddToCommandResults;
     private javax.swing.JTextField jTextFieldItteration;
+    private javax.swing.JTextField jTextFieldNumberOfPC;
     private javax.swing.JLabel jVerticesNumber;
     // End of variables declaration//GEN-END:variables
 
