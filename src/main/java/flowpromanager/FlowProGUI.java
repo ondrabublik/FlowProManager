@@ -677,7 +677,7 @@ public class FlowProGUI extends javax.swing.JFrame {
         if (jRadioButtonIsParallel.isSelected()) { // paralell/local mode
             command += " -jar FlowPro.jar master " + jTextFieldNumberOfPC.getText();
         } else {
-            command += " -jar FlowPro.jar local";
+            command += " -jar FlowPro.jar master 0";
         }
         jLabelCommandRun.setText("java command: " + command);
         jTextAreaOutput.setText("");
