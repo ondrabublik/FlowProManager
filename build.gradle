@@ -19,11 +19,6 @@ repositories {
     }
 }
 
-dependencies {
-    compile name: "Fetcher"
-    //implementation fileTree(dir: "${project(':FlowPro').projectDir}/lib", include: ['*.jar'])
-}
-
 jar {
     manifest {
         attributes(
