@@ -51,7 +51,7 @@ public class FlowProManager {
         }
 
         switch (args[0].toLowerCase()) {
-            case "update": // update libraryie in manifest file
+            case "update": // update libraries in manifest file
                 deleteFileFromZip("FlowPro.jar", "META-INF/MANIFEST.MF");
                 deleteFileFromZip("FlowPro.zip", "FlowPro.jar");
                 createManifest();
@@ -91,6 +91,11 @@ public class FlowProManager {
                         new FlowProGUI().setVisible(true);
                     }
                 });
+                break;
+                
+            case "gmshToFlowPro":
+                GmshToFlowProMeshConverter gmsh2FlowPro = new GmshToFlowProMeshConverter(args[1]);
+                gmsh2FlowPro.convert2D();
                 break;
         }
     }
