@@ -882,7 +882,8 @@ public class FlowProGUI extends javax.swing.JFrame {
         if (jRadioButtonIsParallel.isSelected()) {
             new Thread(new Runnable() {
                 public void run() {
-                    try {
+
+//                    try {
 //                        FetcherServer fetcher = new FetcherServer();
 //                        fetcher.initChecker();
 //                        fetcher.start();
@@ -892,9 +893,10 @@ public class FlowProGUI extends javax.swing.JFrame {
 //                        workerList.stream().forEach((worker) -> {
 //                            jTextAreaPCWorkersList.append(worker + "\n");
 //                        });
-                    } catch (Exception e) {
-                        print("Can not run fetcher!");
-                    }
+
+//                    } catch (Exception e) {
+//                        print("Can not run fetcher!");
+//                    }
                 }
             }).start();
         } else {
