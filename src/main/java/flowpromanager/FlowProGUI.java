@@ -17,7 +17,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import fetcher.*;
+//import fetcher.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -883,15 +883,15 @@ public class FlowProGUI extends javax.swing.JFrame {
             new Thread(new Runnable() {
                 public void run() {
                     try {
-                        FetcherServer fetcher = new FetcherServer();
-                        fetcher.initChecker();
-                        fetcher.start();
-                        Thread.sleep(fetcher.getTimeOut() + 100);
-                        List<String> workerList = fetcher.getCheckedList();
-                        jTextAreaPCWorkersList.setText("");
-                        workerList.stream().forEach((worker) -> {
-                            jTextAreaPCWorkersList.append(worker + "\n");
-                        });
+//                        FetcherServer fetcher = new FetcherServer();
+//                        fetcher.initChecker();
+//                        fetcher.start();
+//                        Thread.sleep(fetcher.getTimeOut() + 100);
+//                        List<String> workerList = fetcher.getCheckedList();
+//                        jTextAreaPCWorkersList.setText("");
+//                        workerList.stream().forEach((worker) -> {
+//                            jTextAreaPCWorkersList.append(worker + "\n");
+//                        });
                     } catch (Exception e) {
                         print("Can not run fetcher!");
                     }
